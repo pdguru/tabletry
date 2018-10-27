@@ -26,6 +26,9 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     @IBOutlet weak var qtyInBasketButton: UIButton!
     @IBOutlet weak var totalPriceLabel: UILabel!
     
+//    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     var basketQty = 0
     var totalPrice: Float = 0.0
     var basket: [NSManagedObject] = []
@@ -40,7 +43,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
                            MyItem(id:8,name:"Audi",subtitle:"5000CS",image:"https://robohash.org/cupiditateestid.png?size=50x50&set=set1",price:4.99,description:"Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.\n\nSed ante. Vivamus tortor. Duis mattis egestas metus."),
                            MyItem(id:9,name:"Pontiac",subtitle:"Grand Prix",image:"https://robohash.org/nonvoluptatumcorporis.png?size=50x50&set=set1",price:4.71,description:"Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.\n\nMaecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.\n\nCurabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."),
                            MyItem(id:10,name:"Lexus",subtitle:"IS",image:"https://robohash.org/estpossimusquasi.bmp?size=50x50&set=set1",price:3.06,description:"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."),
-                           MyItem(id:11,name:"Toyota",subtitle:"Tacoma",image:"https://robohash.org/sedsintsequi.bmp?size=50x50&set=set1",price:3.2,description:"Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.\n\nCurabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est."),
+                           MyItem(id:11,name:"Toyota",subtitle:"Tacoma",image:"https://robohash.org/sedsintsequi.bmp?size=50x50&set=set1",price:3.20,description:"Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.\n\nCurabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est."),
                            MyItem(id:12,name:"Buick",subtitle:"LeSabre",image:"https://robohash.org/doloremquequisquamaccusamus.jpg?size=50x50&set=set1",price:4.93,description:"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.\n\nAliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.\n\nSed ante. Vivamus tortor. Duis mattis egestas metus."),
                            MyItem(id:13,name:"Subaru",subtitle:"Loyale",image:"https://robohash.org/magnamautemanimi.png?size=50x50&set=set1",price:3.11,description:"Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio."),
                            MyItem(id:14,name:"Honda",subtitle:"Accord Crosstour",image:"https://robohash.org/maximequododit.jpg?size=50x50&set=set1",price:4.45,description:"Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.\n\nIn quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.\n\nMaecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."),
@@ -51,6 +54,25 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
                            MyItem(id:19,name:"Kia",subtitle:"Spectra",image:"https://robohash.org/nullablanditiisid.jpg?size=50x50&set=set1",price:4.7,description:"Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem."),
                            MyItem(id:20,name:"Pontiac",subtitle:"Sunfire",image:"https://robohash.org/omnisquifacere.bmp?size=50x50&set=set1",price:3.62,description:"Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum."),]
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Item")
+        
+        do {
+            basket = try context.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        basketQty = basket.count
+        qtyInBasketButton.setTitle("Basket: \(basketQty)", for: .normal)
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
@@ -65,39 +87,51 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             totalPrice = totalPrice + items[indexPath.row].price
             
             qtyInBasketButton.setTitle("Basket: \(basketQty)", for: .normal)
-            totalPriceLabel.text = "Total: £ \(totalPrice)"
+            totalPriceLabel.text = String(format: "Total: £ %.2f", totalPrice)
             
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let detailVC = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        
+        print("passing name: \(items[indexPath.row].name) subtitle: \(items[indexPath.row].subtitle)")
+        
+        detailVC.detailName = items[indexPath.row].name
+        detailVC.detailSubtitle = items[indexPath.row].subtitle
+        detailVC.detailPrice = items[indexPath.row].price
+        detailVC.detailDesc = items[indexPath.row].description
+        detailVC.detailImage = "Apple"
+
+        self.navigationController?.pushViewController(detailVC, animated: true)
+        
+        print("passed name: \(items[indexPath.row].name) subtitle: \(items[indexPath.row].subtitle)")
+        
+    }
+    
     func addToBasket(basketItem: MyItem){
-        guard let appDelegate =
-            UIApplication.shared.delegate as? AppDelegate else {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            else {
                 return
         }
         
-        // 1
-        let managedContext =
-            appDelegate.persistentContainer.viewContext
+        let managedContext = appDelegate.persistentContainer.viewContext
         
-        // 2
-        let entity =
-            NSEntityDescription.entity(forEntityName: "Item",
-                                       in: managedContext)!
+        let entity = NSEntityDescription.entity(forEntityName: "Item", in: managedContext)!
         
-        let sItem = NSManagedObject(entity: entity,
-                                     insertInto: managedContext)
+        let sItem = NSManagedObject(entity: entity, insertInto: managedContext)
         
-        // 3
         sItem.setValue(basketItem.id, forKeyPath: "id")
         sItem.setValue(basketItem.name, forKeyPath: "name")
         sItem.setValue(basketItem.subtitle, forKeyPath: "subtitle")
         sItem.setValue(basketItem.price, forKeyPath: "price")
         sItem.setValue(basketItem.image, forKeyPath: "image")
         sItem.setValue(basketItem.description, forKeyPath: "desc")
+        print("sItem: Name: \(basketItem.name) + Subtitle: \(basketItem.subtitle)")
         
-        // 4
         do {
             try managedContext.save()
             basket.append(sItem)
