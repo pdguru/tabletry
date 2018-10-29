@@ -11,7 +11,7 @@ import SQLite3
 
 class DatabaseHelper{
     
-    fileprivate let dbPointer: OpaquePointer?
+    /*fileprivate let dbPointer: OpaquePointer?
     fileprivate init(dbPointer: OpaquePointer?) {
         self.dbPointer = dbPointer
     }
@@ -24,7 +24,7 @@ class DatabaseHelper{
         let database = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("PurchaseDB.sqlite")
         
         //open database
-        if sqlite3_open(database.path, &dbPointer) == SQLITE_OK{
+        if sqlite3_open(database.path, dbPointer) == SQLITE_OK{
             print("Database opened")
             print("\(database.path)")
         } else {
@@ -145,5 +145,5 @@ class DatabaseHelper{
         }
         
         sqlite3_finalize(deleteStatement)
-    }
+    }*/
 }

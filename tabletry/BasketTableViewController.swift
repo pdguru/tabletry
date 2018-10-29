@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import SQLite3
 
 class BasketItemTableViewCell: UITableViewCell{
     
@@ -25,7 +26,9 @@ class BasketTableViewController: UITableViewController {
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     
-    var itemsInBasket: [NSManagedObject] = []
+    var itemsInBasket: [MyItem] = []
+    
+    var db: OpaquePointer? = nil
 
     @IBAction func done() {
         dismiss(animated: true, completion: nil)
@@ -40,15 +43,10 @@ class BasketTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Item")
-        do {
-            itemsInBasket = try context.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
+        setupDatabase()
+        readDatabase()
     }
-
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -71,10 +69,10 @@ class BasketTableViewController: UITableViewController {
         let localItem = itemsInBasket[indexPath.row]
         let localImage = ["Apple", "Apricot", "Cantaloupe", "Banana", "Blueberry"]
         
-        cell.basketItemId?.text = "\(localItem.value(forKeyPath: "id") as! Int? ?? 0)"
-        cell.basketNameLabel?.text = (localItem.value(forKeyPath: "name") as! String)
-        cell.basketSubLabel?.text = (localItem.value(forKeyPath: "subtitle" ) as! String)
-        cell.basketQtyLabel?.text = "\(localItem.value(forKeyPath: "price") as! Float? ?? 0)"
+        cell.basketItemId?.text = "\(localItem.id)"
+        cell.basketNameLabel?.text = (localItem.name)
+        cell.basketSubLabel?.text = (localItem.subtitle)
+        cell.basketQtyLabel?.text = "\(localItem.price)"
         
         cell.basketImageView?.image  = UIImage(named: localImage[indexPath.row%5])
 
@@ -84,30 +82,16 @@ class BasketTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            let itemToDelete = itemsInBasket[indexPath.row]
-            context.delete(itemToDelete)
-            
+        if(editingStyle == .delete){
+            deleteDatabaseTable(tableName: "BasketSchema", id: itemsInBasket[indexPath.row].id)
+            itemsInBasket.remove(at: indexPath.row)
             let indexPaths = [indexPath]
-//            tableView.deleteRows(at: indexPaths, with: .fade)
-            appDelegate.saveContext()
-//            tableView.reloadData()
+            tableView.deleteRows(at: indexPaths, with: .fade)
         }
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
     @IBAction func clearBasket(_ sender: UIBarButtonItem) {
-        let alert = UIAlertController(title: "Items in basket", message: "Are you sure to empty your basket?" , preferredStyle: .alert)
+        let alert = UIAlertController(title: "Items in basket", message: "Are you sure to empty your basket? \n (Swipe left on item to remove it from the basket)" , preferredStyle: .alert)
         
         let positiveAction = UIAlertAction(title: "Yes", style: .default, handler: {
             action in
@@ -122,8 +106,92 @@ class BasketTableViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    func setupDatabase(){
+        let database = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("PurchaseDB.sqlite")
+        
+        //open database
+        let sqlExecReturn = sqlite3_open(database.path, &db)
+        print("Basket sqlExecReturn: \(sqlExecReturn)")
+        if  sqlExecReturn == SQLITE_OK{
+            print("Database opened")
+            print("\(database.path)")
+        } else {
+            print("Error opening database")
+        }
+    }
+    
+    func readDatabase(){
+        itemsInBasket.removeAll()
+        
+        let query = "select * from BasketSchema"
+        var statement: OpaquePointer? = nil
+        
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK{
+            print("Reading from database")
+            print("\(query)")
+        }else {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("error preparing reading: \(errmsg)")
+            return
+        }
+        
+        //parsing read data
+        print("Sql Read result: \(sqlite3_step(statement))")
+        var counter = 0
+        
+        while(sqlite3_step(statement) == SQLITE_ROW){
+            counter+=1
+            print("Counter in loop \(counter)")
+            
+            let id = sqlite3_column_int(statement, 0)
+            let name = String(cString: sqlite3_column_text(statement, 1))
+            let subtitle = String(cString: sqlite3_column_text(statement, 2))
+            let image = String(cString: sqlite3_column_text(statement, 3))
+            let price = String(cString: sqlite3_column_text(statement, 4))
+            let description1 = String(cString: sqlite3_column_text(statement, 5))
+            
+            let dbItem = MyItem(id: Int(id), name: String(describing: name), subtitle: String(describing: subtitle), image: String(describing: image), price: (String(describing: price) as NSString).floatValue, description: String(describing: description1))
+            
+//            print("ID: \(id) Name: \(name) Subtitle: \(subtitle) Price: \(price) Image: \(image) Description: \(description1)")
+            
+            //adding values to list
+            itemsInBasket.append(dbItem)
+        }
+        sqlite3_finalize(statement)
+    }
+    
+    
     func emptyBasket(){
-        print("Basket is empty")
+        deleteDatabaseTable(tableName: "BasketSchema", id: -1)
+        done()
     }
 
+    func deleteDatabaseTable(tableName: String, id: Int){
+        var deleteStatementStirng: String
+        var successMessage: String
+        var errorMessage: String
+        
+        if id == -1 {
+            deleteStatementStirng = "drop table \(tableName);"
+            successMessage = "Table dropped."
+            errorMessage = "Error dropping table."
+        } else {
+            deleteStatementStirng = "DELETE FROM \(tableName) WHERE id = \(id);"
+            successMessage = "Row deleted."
+            errorMessage = "Error deleting row."
+        }
+        
+        var deleteStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(db, deleteStatementStirng, -1, &deleteStatement, nil) == SQLITE_OK {
+            if sqlite3_step(deleteStatement) == SQLITE_DONE {
+                print(successMessage)
+            } else {
+                print(errorMessage)
+            }
+        } else {
+            print("DELETE statement could not be prepared")
+        }
+        
+        sqlite3_finalize(deleteStatement)
+    }
 }

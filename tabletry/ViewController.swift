@@ -31,7 +31,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     var totalPrice: Float = 0.0
     //    var basket: NSManagedObject
     var items: [MyItem] = []
-//    var idsInBasket: [String] = []
+    //    var idsInBasket: [String] = []
     
     var db: OpaquePointer? = nil
     
@@ -54,11 +54,13 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         
         setupDatabase()
         createTable(tableName: "ItemSchema")
+        createTable(tableName: "BasketSchema")
         readDatabase(tableName: "ItemSchema")
+        //        createBasketTable()
         
         // set labels
-        //        basketQty = basket.quantity
         qtyInBasketButton.setTitle("Basket: \(basketQty)", for: .normal)
+        totalPriceLabel.text = String(format: "Total: £ %.2f", totalPrice)
     }
     
     
@@ -76,7 +78,11 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             totalPriceLabel.text = String(format: "Total: £ %.2f", totalPrice)
             
             //save basketQty and totalPrice to coredata
-            saveToCD()
+//            saveToCD()
+            
+            //save selected item to database
+            createTable(tableName: "BasketSchema")
+            insertIntoBasketTable(id: items[indexPath.row].id)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -152,28 +158,16 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             print("Error opening database")
         }
     }
+    
     func createTable(tableName: String){
         //create tables
         var createStmtPointer: OpaquePointer? = nil
-        let createStmt = "CREATE TABLE IF NOT EXISTS ItemSchema (id TEXT NOT NULL UNIQUE, name TEXT, subtitle TEXT, image TEXT, price NUMERIC, description TEXT, PRIMARY KEY( id ));"
+        let createStmt = "CREATE TABLE IF NOT EXISTS \(tableName) (id TEXT NOT NULL UNIQUE, name TEXT, subtitle TEXT, image TEXT, price NUMERIC, description TEXT, PRIMARY KEY( id ));"
         if sqlite3_exec(db, createStmt, nil, &createStmtPointer, nil) == SQLITE_OK{
-            print("Item table in database created/exists")
+            print("\(tableName) table in database created/exists")
         } else {
             let errmsg = String(cString: sqlite3_errmsg(db)!)
-            print("error creating item table: \(errmsg)")
-        }
-        
-        sqlite3_finalize(createStmtPointer)
-    }
-    
-    func createBasketTable(){
-        var createStmtPointer: OpaquePointer? = nil
-        let createStmt = "CREATE TABLE IF NOT EXISTS BucketSchema (id TEXT NOT NULL UNIQUE, name TEXT, subtitle TEXT, image TEXT, price NUMERIC, description TEXT, PRIMARY KEY( id ));"
-        if sqlite3_exec(db, createStmt, nil, &createStmtPointer, nil) == SQLITE_OK{
-            print("basket table in database created/exists")
-        } else {
-            let errmsg = String(cString: sqlite3_errmsg(db)!)
-            print("error creating bucket table: \(errmsg)")
+            print("error creating \(tableName) table: \(errmsg)")
         }
         
         sqlite3_finalize(createStmtPointer)
@@ -195,7 +189,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         }
         
         //parsing read data
-        
         print("Sql Read result: \(sqlite3_step(statement))")
         var counter = 0
         
@@ -212,7 +205,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             
             let dbItem = MyItem(id: Int(id), name: String(describing: name), subtitle: String(describing: subtitle), image: String(describing: image), price: (String(describing: price) as NSString).floatValue, description: String(describing: description1))
             
-            print("ID: \(id) Name: \(name) Subtitle: \(subtitle) Price: \(price) Image: \(image) Description: \(description1)")
+//            print("ID: \(id) Name: \(name) Subtitle: \(subtitle) Price: \(price) Image: \(image) Description: \(description1)")
             
             //adding values to list
             items.append(dbItem)
@@ -220,56 +213,35 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         sqlite3_finalize(statement)
     }
     
-    func insertIntoTable(tableName: String, id: Int, name: String, subtitle: String, image: String, price: Float, description: String){
-        let insertQuery = "Insert into BucketSchema (id, name, subtitle, image, price, description) values (?,?,?,?,?,?);"
+    func insertIntoBasketTable(id: Int){
+        let insertQuery = "insert into BasketSchema select * from ItemSchema where id = \(id);"
+        print(insertQuery)
         
         var insertStmt: OpaquePointer? = nil
-        
-        if sqlite3_prepare_v2(db, insertQuery, -1, &insertStmt, nil) == SQLITE_OK {
-            let id: Int = id
-            let name: String = name
-            let subtitle: String = subtitle
-            let image: String = image
-            let price: Float = price
-            let description: String = description
-            
-            sqlite3_bind_int(insertStmt, 1, Int32(id))
-            sqlite3_bind_text(insertStmt, 2, name, -1, nil)
-            sqlite3_bind_text(insertStmt, 3, subtitle, -1, nil)
-            sqlite3_bind_text(insertStmt, 4, image, -1, nil)
-            sqlite3_bind_double(insertStmt, 5, Double(price))
-            sqlite3_bind_text(insertStmt, 6, description, -1, nil)
+        let execReturnCode = sqlite3_prepare_v2(db, insertQuery, -1, &insertStmt, nil)
+        if execReturnCode == SQLITE_OK {
+            //            let id: Int = id
+            //            let name: String = name
+            //            let subtitle: String = subtitle
+            //            let image: String = image
+            //            let price: Float = price
+            //            let description: String = description
+            //
+            //            sqlite3_bind_int(insertStmt, 1, Int32(id))
+            //            sqlite3_bind_text(insertStmt, 2, name, -1, nil)
+            //            sqlite3_bind_text(insertStmt, 3, subtitle, -1, nil)
+            //            sqlite3_bind_text(insertStmt, 4, image, -1, nil)
+            //            sqlite3_bind_double(insertStmt, 5, Double(price))
+            //            sqlite3_bind_text(insertStmt, 6, description, -1, nil)
             
             if sqlite3_step(insertStmt) == SQLITE_DONE {
-                print("Successfully inserted row.")
+                print("Successfully inserted row. \(execReturnCode)")
             } else {
-                print("Could not insert row.")
+                print("Could not insert row. \(execReturnCode)")
             }
         } else {
             print("INSERT statement could not be prepared.")
         }
         sqlite3_finalize(insertStmt)
-    }
-    
-    func deleteDatabaseTable(tableName: String, id: Int){
-        var deleteStatementStirng: String
-        if id == -1 {
-            deleteStatementStirng = "drop table \(tableName);"
-        } else {
-            deleteStatementStirng = "DELETE FROM \(tableName) WHERE id = \(id);"
-        }
-        
-        var deleteStatement: OpaquePointer? = nil
-        if sqlite3_prepare_v2(db, deleteStatementStirng, -1, &deleteStatement, nil) == SQLITE_OK {
-            if sqlite3_step(deleteStatement) == SQLITE_DONE {
-                print("Successfully deleted row.")
-            } else {
-                print("Could not delete row.")
-            }
-        } else {
-            print("DELETE statement could not be prepared")
-        }
-        
-        sqlite3_finalize(deleteStatement)
     }
 }
