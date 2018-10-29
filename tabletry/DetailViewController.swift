@@ -30,7 +30,20 @@ class DetailViewController: UIViewController {
         detailSubtitleLbl?.text = "\(detailName) \(detailSubtitle)"
         detailDescTV?.text = detailDesc
         detailPriceLbl?.text = "£ \(detailPrice)"
-        detailImageView?.image = UIImage(named: detailImage)
+        //        detailImageView?.image = UIImage(named: detailImage)
+        
+        let url = URL(string: detailImage)
+        
+        DispatchQueue.global().async {
+            let data = try? Data(contentsOf: url!)
+            if data != nil{
+                DispatchQueue.main.async {
+                    self.detailImageView?.image = UIImage(data: data!)
+                }
+            } else {
+                self.detailImageView?.image = UIImage(named: "Banana")
+            }
+        }
     }
     
     @IBAction func done(){
@@ -42,6 +55,4 @@ class DetailViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
     }
-    
-    
 }

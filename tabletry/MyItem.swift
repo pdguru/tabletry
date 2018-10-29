@@ -27,4 +27,8 @@ class MyItem {
         self.description = description
     }
     
+    func toString(){
+        print("ID: \(id) Name: \(name) Subtitle: \(subtitle) Price: \(price) Image: \(image) Description: \(description)")
+    }
+    
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F72996BD21874C2900BC9D99 /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72996BC21874C2900BC9D99 /* DatabaseHelper.swift */; };
 		F7F57D92217A07F10012C466 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F57D91217A07F10012C466 /* AppDelegate.swift */; };
 		F7F57D94217A07F10012C466 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F57D93217A07F10012C466 /* ViewController.swift */; };
 		F7F57D97217A07F10012C466 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7F57D95217A07F10012C466 /* Main.storyboard */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F72996BC21874C2900BC9D99 /* DatabaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
 		F7F57D8E217A07F10012C466 /* tabletry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tabletry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7F57D91217A07F10012C466 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F7F57D93217A07F10012C466 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				F7F57D91217A07F10012C466 /* AppDelegate.swift */,
+				F72996BC21874C2900BC9D99 /* DatabaseHelper.swift */,
 				F7F57D93217A07F10012C466 /* ViewController.swift */,
 				F7F57DB8217F76490012C466 /* MyItem.swift */,
 				F7F57DB0217E2E180012C466 /* data.json */,
@@ -158,6 +161,7 @@
 				F7F57DB5217F49440012C466 /* AddToBasketViewController.swift in Sources */,
 				F7F57D92217A07F10012C466 /* AppDelegate.swift in Sources */,
 				F7F57D9A217A07F10012C466 /* tabletry.xcdatamodeld in Sources */,
+				F72996BD21874C2900BC9D99 /* DatabaseHelper.swift in Sources */,
 				F7F57DB9217F76490012C466 /* MyItem.swift in Sources */,
 				F7F57DB3217E556C0012C466 /* DetailViewController.swift in Sources */,
 				F7F57DB7217F73050012C466 /* BasketTableViewController.swift in Sources */,
