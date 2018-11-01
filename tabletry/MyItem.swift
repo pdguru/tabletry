@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MyItem {
+class MyItem: Codable {
     
     let id: Int
     let name: String
