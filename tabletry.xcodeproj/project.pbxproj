@@ -14,14 +14,13 @@
 		F7F57D9A217A07F10012C466 /* tabletry.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7F57D98217A07F10012C466 /* tabletry.xcdatamodeld */; };
 		F7F57D9C217A07F20012C466 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7F57D9B217A07F20012C466 /* Assets.xcassets */; };
 		F7F57D9F217A07F20012C466 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7F57D9D217A07F20012C466 /* LaunchScreen.storyboard */; };
-		F7F57DB1217E2E180012C466 /* data.json in Resources */ = {isa = PBXBuildFile; fileRef = F7F57DB0217E2E180012C466 /* data.json */; };
 		F7F57DB3217E556C0012C466 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F57DB2217E556C0012C466 /* DetailViewController.swift */; };
-		F7F57DB5217F49440012C466 /* AddToBasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F57DB4217F49440012C466 /* AddToBasketViewController.swift */; };
 		F7F57DB7217F73050012C466 /* BasketTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F57DB6217F73050012C466 /* BasketTableViewController.swift */; };
 		F7F57DB9217F76490012C466 /* MyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F57DB8217F76490012C466 /* MyItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		60524C5E218C933A00FDE956 /* PurchaseDB.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = PurchaseDB.sqlite; sourceTree = "<group>"; };
 		F72996BC21874C2900BC9D99 /* DatabaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
 		F7F57D8E217A07F10012C466 /* tabletry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tabletry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7F57D91217A07F10012C466 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -31,9 +30,7 @@
 		F7F57D9B217A07F20012C466 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F7F57D9E217A07F20012C466 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F7F57DA0217A07F20012C466 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F7F57DB0217E2E180012C466 /* data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = data.json; sourceTree = "<group>"; };
 		F7F57DB2217E556C0012C466 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
-		F7F57DB4217F49440012C466 /* AddToBasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToBasketViewController.swift; sourceTree = "<group>"; };
 		F7F57DB6217F73050012C466 /* BasketTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketTableViewController.swift; sourceTree = "<group>"; };
 		F7F57DB8217F76490012C466 /* MyItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -72,11 +69,10 @@
 				F72996BC21874C2900BC9D99 /* DatabaseHelper.swift */,
 				F7F57D93217A07F10012C466 /* ViewController.swift */,
 				F7F57DB8217F76490012C466 /* MyItem.swift */,
-				F7F57DB0217E2E180012C466 /* data.json */,
 				F7F57D95217A07F10012C466 /* Main.storyboard */,
-				F7F57DB4217F49440012C466 /* AddToBasketViewController.swift */,
 				F7F57DB6217F73050012C466 /* BasketTableViewController.swift */,
 				F7F57DB2217E556C0012C466 /* DetailViewController.swift */,
+				60524C5E218C933A00FDE956 /* PurchaseDB.sqlite */,
 				F7F57D9B217A07F20012C466 /* Assets.xcassets */,
 				F7F57D9D217A07F20012C466 /* LaunchScreen.storyboard */,
 				F7F57DA0217A07F20012C466 /* Info.plist */,
@@ -146,7 +142,6 @@
 				F7F57D9F217A07F20012C466 /* LaunchScreen.storyboard in Resources */,
 				F7F57D9C217A07F20012C466 /* Assets.xcassets in Resources */,
 				F7F57D97217A07F10012C466 /* Main.storyboard in Resources */,
-				F7F57DB1217E2E180012C466 /* data.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +153,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7F57D94217A07F10012C466 /* ViewController.swift in Sources */,
-				F7F57DB5217F49440012C466 /* AddToBasketViewController.swift in Sources */,
 				F7F57D92217A07F10012C466 /* AppDelegate.swift in Sources */,
 				F7F57D9A217A07F10012C466 /* tabletry.xcdatamodeld in Sources */,
 				F72996BD21874C2900BC9D99 /* DatabaseHelper.swift in Sources */,
