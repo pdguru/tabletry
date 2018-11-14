@@ -78,7 +78,6 @@ class DatabaseHelper{
             if sqlite3_bind_double(insertStmt, 5, Double(price)) != SQLITE_OK { print("Binding PRICE failed") }
             if sqlite3_bind_text(insertStmt, 6, description, -1, nil) != SQLITE_OK { print("Binding DESCRIPTION failed") }
             
-//            print("Exec query: \(insertQuery)")
             
             if sqlite3_step(insertStmt) == SQLITE_DONE {
                 print("Successfully inserted row. \(execReturnCode)")

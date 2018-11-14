@@ -26,18 +26,21 @@ class BasketTableViewController: UITableViewController {
     
     var itemsInBasket: [MyItem] = []
     
-    //    var db: OpaquePointer? = nil
+    var basketQty = 0
+    var totalPrice: Float = 0.0
+    
     var dbInstance: DatabaseHelper?
     
     @IBAction func done() {
         dismiss(animated: true, completion: nil)
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Items in basket"
+        
+        getSavedData()
         
         dbInstance = DatabaseHelper.instance
         if dbInstance?.openDatabase() == SQLITE_OK {
@@ -90,6 +93,10 @@ class BasketTableViewController: UITableViewController {
         
         if(editingStyle == .delete){
             if dbInstance?.deleteDatabaseTable(tableName: "BasketSchema", id: itemsInBasket[indexPath.row].id) == SQLITE_OK{
+                
+                updateSavedData(bQty: basketQty-1,
+                                tPrice: totalPrice-itemsInBasket[indexPath.row].price)
+                
                 itemsInBasket.remove(at: indexPath.row)
                 let indexPaths = [indexPath]
                 tableView.deleteRows(at: indexPaths, with: .fade)
@@ -116,6 +123,54 @@ class BasketTableViewController: UITableViewController {
     func emptyBasket(){
         if dbInstance?.deleteDatabaseTable(tableName: "BasketSchema", id: -1) == SQLITE_OK{
             done()
+        }
+        updateSavedData(bQty: 0, tPrice: 0.00)
+    }
+    
+    func getSavedData(){
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            else {
+                return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Basket")
+        
+        do{
+            let result = try managedContext.fetch(fetchRequest)
+            for data in result as! [NSManagedObject]{
+                basketQty = data.value(forKey: "quantity") as! Int
+                totalPrice = data.value(forKey: "price") as! Float
+            }
+        } catch {
+            print("Could not fetch values from core data")
+        }
+    }
+    
+    func updateSavedData(bQty: Int, tPrice: Float){
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            else {
+                return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Basket", in: managedContext)!
+        
+        let basket = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        basket.setValue(bQty, forKeyPath: "quantity")
+        basket.setValue(tPrice, forKeyPath: "price")
+        
+        do {
+            try managedContext.save()
+            
+            //update the two local variables to reflect the new vaules
+            basketQty = bQty
+            totalPrice = tPrice
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
         }
     }
 }

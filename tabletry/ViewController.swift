@@ -36,14 +36,29 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
 //        var db: OpaquePointer? = nil
     var dbInstance: DatabaseHelper?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        downloadJsonFromUrl(url: "https://my.api.mockaroo.com/items.json?key=f2324050")
+        //get stored data
+        getSavedData()
         
         // set labels
         qtyInBasketButton.setTitle("Basket: \(basketQty)", for: .normal)
         totalPriceLabel.text = String(format: "Total: £ %.2f", totalPrice)
+        
+        if(basketQty == 0){
+//            if qtyInBasketButton.isTouchInside{
+//            showAlert(title: "Basket", message: "Basket is currently empty. Tap on an item in the list to add it to the basket.", action: true)
+//            }
+            qtyInBasketButton.isEnabled = false
+        }else{
+            qtyInBasketButton.isEnabled = true
+        }
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        downloadJsonFromUrl(url: "https://my.api.mockaroo.com/items.json?key=f2324050")
         
         //        setupDatabase()
         dbInstance = DatabaseHelper.instance
@@ -54,20 +69,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         }else{
             print("Database could not be opened.")
         }
-    }
-    
-    func showAlert(title: String, message: String, action: Bool){
-        alert = UIAlertController(title: title, message: message , preferredStyle: .alert)
-        
-        let alertAction = UIAlertAction(title: "OK", style: .default, handler: { action in
-            self.dismiss(animated: true, completion: nil)
-        })
-        
-        if(action){
-            alert!.addAction(alertAction)
-        }
-        
-        present(alert!, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -88,11 +89,20 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             //save selected item to database
             if dbInstance?.insertIntoBasketTable(id: items[indexPath.row].id, name: items[indexPath.row].name, subtitle: items[indexPath.row].subtitle, image: items[indexPath.row].image, price: items[indexPath.row].price, description: items[indexPath.row].description) == SQLITE_OK{
                 
+
                 basketQty+=1
                 totalPrice = totalPrice + items[indexPath.row].price
                 
                 qtyInBasketButton.setTitle("Basket: \(basketQty)", for: .normal)
                 totalPriceLabel.text = String(format: "Total: £ %.2f", totalPrice)
+                
+                if(basketQty == 0){
+                    qtyInBasketButton.isEnabled = false
+                }else{
+                    qtyInBasketButton.isEnabled = true
+                }
+                
+                updateSavedData(bQty: basketQty, tPrice: totalPrice)
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -114,41 +124,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         self.navigationController?.pushViewController(detailVC, animated: true)
         
         print("passed name: \(items[indexPath.row].name) subtitle: \(items[indexPath.row].subtitle)")
-    }
-    
-    func downloadJsonFromUrl(url: String){
-        if !Reachability.isConnectedToNetwork(){
-            showAlert(title: "Internet connection", message: "Could not connect to the internet to fetch data.", action: true);
-        }else{
-            print("Internet Connection Available!")
-        }
-        
-        print("Begin downloading data")
-        showAlert(title: "Initialising", message: "Fetching required data...", action: false)
-    
-        guard let downloadUrl  = URL(string: url) else {return}
-        URLSession.shared.dataTask(with: downloadUrl) { data, urlResponse, error in
-            guard let data = data, error == nil, urlResponse != nil else {
-                print("Error loading data from URL")
-                self.showAlert(title: "Uh oh!", message: "Unfortunately, data could not be downloaded at this time.\nPlease try again.", action: true)
-                return
-            }
-            print("Json downloaded successfully")
-            do{
-                let decoder = JSONDecoder()
-                self.items = try decoder.decode([MyItem].self, from: data)
-                print("Downloaded data size: \(self.items.count)")
-                DispatchQueue.main.async {
-                    self.myTableView.reloadData()
-                }
-            } catch {
-                print("Error after downloading data")
-                self.showAlert(title: "Uh oh!", message: "Unfortunately, data could not be downloaded at this time.\nPlease try again", action: true)
-            }
-            }.resume()
-        if(self.alert != nil){
-            self.alert!.dismiss(animated: true, completion: nil)
-        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -179,5 +154,97 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
             }
         }
         return cell
+    }
+    
+    func getSavedData(){
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            else {
+                return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Basket")
+        
+        do{
+            let result = try managedContext.fetch(fetchRequest)
+            for data in result as! [NSManagedObject]{
+                basketQty = data.value(forKey: "quantity") as! Int
+                totalPrice = data.value(forKey: "price") as! Float
+            }
+        } catch {
+            print("Could not fetch values from core data")
+        }
+    }
+    
+    func updateSavedData(bQty: Int, tPrice: Float){
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            else {
+                return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Basket", in: managedContext)!
+        
+        let basket = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        basket.setValue(bQty, forKeyPath: "quantity")
+        basket.setValue(tPrice, forKeyPath: "price")
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+    }
+    
+    func downloadJsonFromUrl(url: String){
+        if !Reachability.isConnectedToNetwork(){
+            showAlert(title: "Internet connection", message: "Could not connect to the internet to fetch data.", action: true);
+        }else{
+            print("Internet Connection Available!")
+        }
+        
+        print("Begin downloading data")
+        showAlert(title: "Initialising", message: "Fetching required data...", action: false)
+        
+        guard let downloadUrl  = URL(string: url) else {return}
+        URLSession.shared.dataTask(with: downloadUrl) { data, urlResponse, error in
+            guard let data = data, error == nil, urlResponse != nil else {
+                print("Error loading data from URL")
+                self.showAlert(title: "Uh oh!", message: "Unfortunately, data could not be downloaded at this time.\nPlease try again.", action: true)
+                return
+            }
+            print("Json downloaded successfully")
+            do{
+                let decoder = JSONDecoder()
+                self.items = try decoder.decode([MyItem].self, from: data)
+                print("Downloaded data size: \(self.items.count)")
+                DispatchQueue.main.async {
+                    self.myTableView.reloadData()
+                }
+            } catch {
+                print("Error after downloading data")
+                self.showAlert(title: "Uh oh!", message: "Unfortunately, data could not be downloaded at this time.\nPlease try again", action: true)
+            }
+            }.resume()
+        if(self.alert != nil){
+            self.alert!.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func showAlert(title: String, message: String, action: Bool){
+        alert = UIAlertController(title: title, message: message , preferredStyle: .alert)
+        
+        let alertAction = UIAlertAction(title: "OK", style: .default, handler: { action in
+            self.dismiss(animated: true, completion: nil)
+        })
+        
+        if(action){
+            alert!.addAction(alertAction)
+        }
+        
+        present(alert!, animated: true, completion: nil)
     }
 }
