@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="CVK-0l-OdD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="CVK-0l-OdD">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,16 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="gNR-d1-PTa">
-                                <rect key="frame" x="180" y="336" width="50" height="50"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="TKO-W1-4Xt"/>
-                                    <constraint firstAttribute="width" constant="50" id="cao-FP-nuW"/>
-                                    <constraint firstAttribute="width" secondItem="gNR-d1-PTa" secondAttribute="height" multiplier="1:1" id="e4N-B2-lM8"/>
-                                </constraints>
-                                <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </activityIndicatorView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="110" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Vkt-Z3-oeS">
                                 <rect key="frame" x="10" y="101" width="394" height="575"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -130,15 +120,10 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="gNR-d1-PTa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-234" id="0yH-zK-GZE"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="gNR-d1-PTa" secondAttribute="bottom" constant="-322" id="PKk-zv-KTl"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Item list" id="PMJ-ha-LVS"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="gNR-d1-PTa" id="9i1-7b-ISn"/>
                         <outlet property="myTableView" destination="Vkt-Z3-oeS" id="hpT-OT-t7n"/>
                         <outlet property="qtyInBasketButton" destination="PgA-BV-h9g" id="9td-Dm-0yF"/>
                         <outlet property="totalPriceLabel" destination="otJ-3S-nuO" id="MYV-7A-xBy"/>
@@ -346,6 +331,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Apple" width="200" height="200"/>
+        <image name="Apple" width="60" height="60"/>
     </resources>
 </document>

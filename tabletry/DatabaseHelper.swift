@@ -10,7 +10,6 @@ import Foundation
 import SQLite3
 
 class DatabaseHelper{
-    
     static let instance = DatabaseHelper()
     var db: OpaquePointer? = nil
     
@@ -19,23 +18,31 @@ class DatabaseHelper{
     }
     
     func openDatabase() -> Int32{
-        let databaseURL = Bundle.main.url(forResource: "PurchaseDB", withExtension: "sqlite")
-        print("Database path: \(databaseURL?.path)")
         
-        //open database
-        let execReturnCode = sqlite3_open(databaseURL?.path, &db)
-        if execReturnCode == SQLITE_OK{
-            print("Database opened: \(execReturnCode)")
-        } else {
-            print("Error opening database \(execReturnCode)")
+        do{
+            let dbDir = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let fileUrl = dbDir.appendingPathComponent("purchases").appendingPathExtension("sqlite")
+            print("Database path: \(fileUrl.path)")
+            
+            //open database
+            let execReturnCode = sqlite3_open(fileUrl.path, &db)
+            if execReturnCode == SQLITE_OK{
+                print("Database opened: \(execReturnCode)")
+                return execReturnCode
+            } else {
+                print("Error opening database \(execReturnCode)")
+                return execReturnCode
+            }
+        } catch {
+            print("error locating database")
+            return SQLITE_FAIL
         }
-        return execReturnCode
     }
     
     func createTable(tableName: String) -> Int32{
         //create tables
         var createStmtPointer: OpaquePointer? = nil
-        let createStmt = "CREATE TABLE IF NOT EXISTS \(tableName) (id TEXT NOT NULL , name TEXT, subtitle TEXT, image TEXT, price NUMERIC, description TEXT, PRIMARY KEY( id ));"
+        let createStmt = "CREATE TABLE IF NOT EXISTS \(tableName) (id TEXT NOT NULL , name TEXT, subtitle TEXT, image TEXT, price NUMERIC, description TEXT);"
         let execReturnCode = sqlite3_exec(db, createStmt, nil, &createStmtPointer, nil)
         if  execReturnCode == SQLITE_OK{
             print("\(tableName) table in database created/exists")
@@ -50,11 +57,11 @@ class DatabaseHelper{
     
     func insertIntoBasketTable(id: Int, name: String, subtitle: String, image: String, price: Float, description: String) -> Int32 {
         let insertQuery = "insert into BasketSchema (id, name, subtitle, image, price, description) values (?,?,?,?,?,?);"
-//        print(insertQuery)
+        
+        print("inserting \(name) + \(subtitle)")
         
         var insertStmt: OpaquePointer? = nil
         let execReturnCode = sqlite3_prepare_v2(db, insertQuery, -1, &insertStmt, nil)
-        print("Exec query: \(insertQuery)")
         
         if execReturnCode == SQLITE_OK {
             let id: Int = id
@@ -64,12 +71,14 @@ class DatabaseHelper{
             let price: Float = price
             let description: String = description
             
-            sqlite3_bind_int(insertStmt, 1, Int32(id))
-            sqlite3_bind_text(insertStmt, 2, name, -1, nil)
-            sqlite3_bind_text(insertStmt, 3, subtitle, -1, nil)
-            sqlite3_bind_text(insertStmt, 4, image, -1, nil)
-            sqlite3_bind_double(insertStmt, 5, Double(price))
-            sqlite3_bind_text(insertStmt, 6, description, -1, nil)
+            if sqlite3_bind_int(insertStmt, 1, Int32(id)) != SQLITE_OK { print("Binding ID failed") }
+            if sqlite3_bind_text(insertStmt, 2, name, -1, nil) != SQLITE_OK { print("Binding NAME failed") }
+            if sqlite3_bind_text(insertStmt, 3, subtitle, -1, nil) != SQLITE_OK { print("Binding SUBTITLE failed") }
+            if sqlite3_bind_text(insertStmt, 4, image, -1, nil) != SQLITE_OK { print("Binding IMAGE failed") }
+            if sqlite3_bind_double(insertStmt, 5, Double(price)) != SQLITE_OK { print("Binding PRICE failed") }
+            if sqlite3_bind_text(insertStmt, 6, description, -1, nil) != SQLITE_OK { print("Binding DESCRIPTION failed") }
+            
+//            print("Exec query: \(insertQuery)")
             
             if sqlite3_step(insertStmt) == SQLITE_DONE {
                 print("Successfully inserted row. \(execReturnCode)")
@@ -115,7 +124,7 @@ class DatabaseHelper{
     }
     
     func readDatabase(_ tableName: String) -> [MyItem]?{
-         var itemsInBasket: [MyItem] = []
+        var itemsInBasket: [MyItem] = []
         
         let query = "select * from \(tableName)"
         var statement: OpaquePointer? = nil
@@ -132,8 +141,8 @@ class DatabaseHelper{
         //parsing read data
         print("Sql Read result: \(sqlite3_step(statement))")
         var counter = 0
-
-        while(sqlite3_step(statement) == SQLITE_ROW){
+        
+        repeat{
             counter+=1
             print("Counter in loop \(counter)")
             
@@ -145,8 +154,10 @@ class DatabaseHelper{
             let description1 = String(cString: sqlite3_column_text(statement, 5))
             
             let dbItem = MyItem(id: Int(id), name: String(describing: name), subtitle: String(describing: subtitle), image: String(describing: image), price: (String(describing: price) as NSString).floatValue, description: String(describing: description1))
+            
             itemsInBasket.append(dbItem)
-        }
+        }while(sqlite3_step(statement) == SQLITE_ROW);
+        
         sqlite3_finalize(statement)
         return itemsInBasket
     }
