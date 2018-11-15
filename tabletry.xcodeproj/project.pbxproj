@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F72996BD21874C2900BC9D99 /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72996BC21874C2900BC9D99 /* DatabaseHelper.swift */; };
-		F7586ECA2199C34E0080A5A6 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F7586EC92199C34D0080A5A6 /* libsqlite3.tbd */; };
+		F7586ECA2199C34E0080A5A6 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F7586EC92199C34D0080A5A6 /* libsqlite3.tbd */; settings = {ATTRIBUTES = (Required, ); }; };
 		F7DCDBEC2199AD3C001A5034 /* InternetConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DCDBEB2199AD3C001A5034 /* InternetConnection.swift */; };
 		F7F57D92217A07F10012C466 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F57D91217A07F10012C466 /* AppDelegate.swift */; };
 		F7F57D94217A07F10012C466 /* MainListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F57D93217A07F10012C466 /* MainListViewController.swift */; };
