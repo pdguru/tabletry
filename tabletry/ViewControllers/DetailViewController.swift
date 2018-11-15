@@ -40,7 +40,7 @@ class DetailViewController: UIViewController {
                     self.detailImageView?.image = UIImage(data: data!)
                 }
             } else {
-                self.detailImageView?.image = UIImage(named: "Banana")
+                self.detailImageView?.image = UIImage(named: "loading")
             }
         }
     }

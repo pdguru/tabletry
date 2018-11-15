@@ -126,7 +126,7 @@ class MainListViewController: UIViewController, UITableViewDelegate,UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableCell", for: indexPath) as! ItemTableViewCell
         
         let localItem = items[indexPath.row]
-        let localImage = ["Apple", "Apricot", "Cantaloupe", "Banana", "Blueberry"]
+//        let localImage = ["loading"]
         
         
         cell.cellItemId?.text = "\(localItem.id)"
@@ -144,7 +144,7 @@ class MainListViewController: UIViewController, UITableViewDelegate,UITableViewD
                     }
                 }else {
                     DispatchQueue.main.async {
-                        cell.cellImageView?.image = UIImage(named: localImage[indexPath.row%5])
+                        cell.cellImageView?.image = UIImage(named: "loading")
                     }
                 }
             }

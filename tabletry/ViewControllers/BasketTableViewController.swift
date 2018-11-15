@@ -73,7 +73,7 @@ class BasketTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BasketItem", for: indexPath) as! BasketItemTableViewCell
         
         let localItem = itemsInBasket[indexPath.row]
-        let localImage = ["Apple", "Apricot", "Cantaloupe", "Banana", "Blueberry"]
+//        let localImage = ["loading"]
         
         cell.basketItemId?.text = "\(localItem.id)"
         cell.basketNameLabel?.text = (localItem.name)
@@ -90,7 +90,7 @@ class BasketTableViewController: UITableViewController {
                     }
                 }else {
                     DispatchQueue.main.async {
-                        cell.basketImageView?.image = UIImage(named: localImage[indexPath.row%5])
+                        cell.basketImageView?.image = UIImage(named: "loading")
                     }
                 }
             }
