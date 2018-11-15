@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:tabletry.xcodeproj">
+      location = "self:/Users/pramodguruprasad/Desktop/tabletry/CFM-Purchase.xcodeproj">
    </FileRef>
 </Workspace>

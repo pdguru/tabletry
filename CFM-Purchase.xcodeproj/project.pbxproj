@@ -25,7 +25,7 @@
 		F72996BC21874C2900BC9D99 /* DatabaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
 		F7586EC92199C34D0080A5A6 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		F7DCDBEB2199AD3C001A5034 /* InternetConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetConnection.swift; sourceTree = "<group>"; };
-		F7F57D8E217A07F10012C466 /* tabletry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tabletry.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7F57D8E217A07F10012C466 /* CFM-Purchase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CFM-Purchase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7F57D91217A07F10012C466 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F7F57D93217A07F10012C466 /* MainListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListViewController.swift; sourceTree = "<group>"; };
 		F7F57D96217A07F10012C466 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -97,7 +97,7 @@
 		F7F57D8F217A07F10012C466 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F7F57D8E217A07F10012C466 /* tabletry.app */,
+				F7F57D8E217A07F10012C466 /* CFM-Purchase.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,9 +121,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F7F57D8D217A07F10012C466 /* tabletry */ = {
+		F7F57D8D217A07F10012C466 /* CFM-Purchase */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F7F57DA3217A07F20012C466 /* Build configuration list for PBXNativeTarget "tabletry" */;
+			buildConfigurationList = F7F57DA3217A07F20012C466 /* Build configuration list for PBXNativeTarget "CFM-Purchase" */;
 			buildPhases = (
 				F7F57D8A217A07F10012C466 /* Sources */,
 				F7F57D8B217A07F10012C466 /* Frameworks */,
@@ -133,9 +133,9 @@
 			);
 			dependencies = (
 			);
-			name = tabletry;
+			name = "CFM-Purchase";
 			productName = tabletry;
-			productReference = F7F57D8E217A07F10012C466 /* tabletry.app */;
+			productReference = F7F57D8E217A07F10012C466 /* CFM-Purchase.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -153,7 +153,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F7F57D89217A07F10012C466 /* Build configuration list for PBXProject "tabletry" */;
+			buildConfigurationList = F7F57D89217A07F10012C466 /* Build configuration list for PBXProject "CFM-Purchase" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -166,7 +166,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F7F57D8D217A07F10012C466 /* tabletry */,
+				F7F57D8D217A07F10012C466 /* CFM-Purchase */,
 			);
 		};
 /* End PBXProject section */
@@ -379,7 +379,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F7F57D89217A07F10012C466 /* Build configuration list for PBXProject "tabletry" */ = {
+		F7F57D89217A07F10012C466 /* Build configuration list for PBXProject "CFM-Purchase" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F7F57DA1217A07F20012C466 /* Debug */,
@@ -388,7 +388,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F7F57DA3217A07F20012C466 /* Build configuration list for PBXNativeTarget "tabletry" */ = {
+		F7F57DA3217A07F20012C466 /* Build configuration list for PBXNativeTarget "CFM-Purchase" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F7F57DA4217A07F20012C466 /* Debug */,
