@@ -81,8 +81,22 @@ class BasketTableViewController: UITableViewController {
         cell.basketNameLabel?.text = (localItem.name)
         cell.basketSubLabel?.text = (localItem.subtitle)
         cell.basketQtyLabel?.text = "\(localItem.price)"
-        
-        cell.basketImageView?.image  = UIImage(named: localImage[indexPath.row%5])
+
+        //load image from URL
+        if let imageURL = URL(string: localItem.image){
+            DispatchQueue.global().async {
+                let data = try? Data(contentsOf: imageURL)
+                if data != nil {
+                    DispatchQueue.main.async {
+                        cell.basketImageView?.image  = UIImage(data: data!)
+                    }
+                }else {
+                    DispatchQueue.main.async {
+                        cell.basketImageView?.image = UIImage(named: localImage[indexPath.row%5])
+                    }
+                }
+            }
+        }
         
         return cell
     }

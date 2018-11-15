@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9756596A690A317180320D5D /* Pods_tabletry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C98F92C24607A22D04C63ED0 /* Pods_tabletry.framework */; };
 		F72996BD21874C2900BC9D99 /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72996BC21874C2900BC9D99 /* DatabaseHelper.swift */; };
 		F7586ECA2199C34E0080A5A6 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F7586EC92199C34D0080A5A6 /* libsqlite3.tbd */; };
 		F7DCDBEC2199AD3C001A5034 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DCDBEB2199AD3C001A5034 /* Reachability.swift */; };
@@ -48,7 +47,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7586ECA2199C34E0080A5A6 /* libsqlite3.tbd in Frameworks */,
-				9756596A690A317180320D5D /* Pods_tabletry.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

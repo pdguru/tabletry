@@ -71,6 +71,8 @@ class DatabaseHelper{
             let price: Float = price
             let description: String = description
             
+            print("preparing \(name) + \(subtitle)")
+            
             if sqlite3_bind_int(insertStmt, 1, Int32(id)) != SQLITE_OK { print("Binding ID failed") }
             if sqlite3_bind_text(insertStmt, 2, name, -1, nil) != SQLITE_OK { print("Binding NAME failed") }
             if sqlite3_bind_text(insertStmt, 3, subtitle, -1, nil) != SQLITE_OK { print("Binding SUBTITLE failed") }
@@ -152,7 +154,11 @@ class DatabaseHelper{
             let price = String(cString: sqlite3_column_text(statement, 4))
             let description1 = String(cString: sqlite3_column_text(statement, 5))
             
+            print("got \(name) + \(subtitle)")
+            
             let dbItem = MyItem(id: Int(id), name: String(describing: name), subtitle: String(describing: subtitle), image: String(describing: image), price: (String(describing: price) as NSString).floatValue, description: String(describing: description1))
+            
+            dbItem.toString()
             
             itemsInBasket.append(dbItem)
         }while(sqlite3_step(statement) == SQLITE_ROW);
