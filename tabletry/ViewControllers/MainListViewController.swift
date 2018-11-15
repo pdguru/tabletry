@@ -20,7 +20,7 @@ class ItemTableViewCell: UITableViewCell{
     
 }
 
-class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
+class MainListViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
     @IBOutlet weak var myTableView: UITableView!
     
@@ -47,9 +47,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         totalPriceLabel.text = String(format: "Total: £ %.2f", totalPrice)
         
         if(basketQty == 0){
-//            if qtyInBasketButton.isTouchInside{
-//            showAlert(title: "Basket", message: "Basket is currently empty. Tap on an item in the list to add it to the basket.", action: true)
-//            }
             qtyInBasketButton.isEnabled = false
         }else{
             qtyInBasketButton.isEnabled = true
@@ -60,7 +57,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         
         downloadJsonFromUrl(url: "https://my.api.mockaroo.com/items.json?key=f2324050")
         
-        //        setupDatabase()
         dbInstance = DatabaseHelper.instance
         if dbInstance?.openDatabase() == SQLITE_OK {
             if dbInstance?.createTable(tableName: "BasketSchema") == SQLITE_OK {
@@ -200,7 +196,7 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     }
     
     func downloadJsonFromUrl(url: String){
-        if !Reachability.isConnectedToNetwork(){
+        if !InternetConnection.isConnectedToNetwork(){
             showAlert(title: "Internet connection", message: "Could not connect to the internet to fetch data.", action: true);
         }else{
             print("Internet Connection Available!")

@@ -145,7 +145,6 @@ class DatabaseHelper{
         
         repeat{
             counter+=1
-            print("Counter in loop \(counter)")
             
             let id = sqlite3_column_int(statement, 0)
             let name = String(cString: sqlite3_column_text(statement, 1))
@@ -154,11 +153,7 @@ class DatabaseHelper{
             let price = String(cString: sqlite3_column_text(statement, 4))
             let description1 = String(cString: sqlite3_column_text(statement, 5))
             
-            print("got \(name) + \(subtitle)")
-            
             let dbItem = MyItem(id: Int(id), name: String(describing: name), subtitle: String(describing: subtitle), image: String(describing: image), price: (String(describing: price) as NSString).floatValue, description: String(describing: description1))
-            
-            dbItem.toString()
             
             itemsInBasket.append(dbItem)
         }while(sqlite3_step(statement) == SQLITE_ROW);

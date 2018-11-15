@@ -30,8 +30,7 @@ class DetailViewController: UIViewController {
         detailSubtitleLbl?.text = "\(detailName) \(detailSubtitle)"
         detailDescTV?.text = detailDesc
         detailPriceLbl?.text = "£ \(detailPrice)"
-        //        detailImageView?.image = UIImage(named: detailImage)
-        
+    
         let url = URL(string: detailImage)
         
         DispatchQueue.global().async {
@@ -50,7 +49,6 @@ class DetailViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)

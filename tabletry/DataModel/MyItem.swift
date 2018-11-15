@@ -27,7 +27,7 @@ class MyItem: Codable {
         self.description = description
     }
     
-    func toString(){
+    func printAsString(){
         print("ID: \(id) Name: \(name) Subtitle: \(subtitle) Price: \(price) Image: \(image) Description: \(description)")
     }
     
