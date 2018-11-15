@@ -88,7 +88,7 @@
 		F7F57D85217A07F10012C466 = {
 			isa = PBXGroup;
 			children = (
-				F7F57D90217A07F10012C466 /* tabletry */,
+				F7F57D90217A07F10012C466 /* CFM-Purchase */,
 				F7F57D8F217A07F10012C466 /* Products */,
 				9DCC3980ADD67E4F3B0E36B7 /* Frameworks */,
 			);
@@ -102,7 +102,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F7F57D90217A07F10012C466 /* tabletry */ = {
+		F7F57D90217A07F10012C466 /* CFM-Purchase */ = {
 			isa = PBXGroup;
 			children = (
 				F7F57D91217A07F10012C466 /* AppDelegate.swift */,
@@ -115,7 +115,7 @@
 				F7F57DA0217A07F20012C466 /* Info.plist */,
 				F7F57D98217A07F10012C466 /* tabletry.xcdatamodeld */,
 			);
-			path = tabletry;
+			path = "CFM-Purchase";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -344,7 +344,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CH5H38J3A9;
-				INFOPLIST_FILE = tabletry/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/CFM-Purchase/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -363,7 +363,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CH5H38J3A9;
-				INFOPLIST_FILE = tabletry/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/CFM-Purchase/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
